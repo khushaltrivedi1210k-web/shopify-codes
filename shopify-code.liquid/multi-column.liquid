@@ -1,0 +1,176 @@
+<style>
+  #section-{{ section.id }} {
+    padding: 60px 20px;
+    background-color: {{ section.settings.bg_color }};
+    margin-bottom: 30px;
+  }
+  .container-column {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .heading-main {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .heading-main h2 {
+    font-size: 32px;
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+  /* Heading ke niche choti border-bottom width wali line */
+  .heading-main h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #000;
+  }
+
+  .columns-all {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+  }
+  .columns {
+    flex: 1;
+    min-width: 250px;
+    max-width: 350px;
+    text-align: center;
+  }
+.columns-imgs img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    object-fit: cover;
+    max-width: 90px;
+    max-height: 90px;
+    border-radius: 50%;
+}
+  .heading-columns h3 {
+    font-size: 20px;
+    margin: 10px 0;
+  }
+  .paragraph-columns p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 767px) {
+    .columns {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<section class="multi-columns" id="section-{{ section.id }}">
+    <div class="container-column">
+
+        <!-- Main Heading (Ab ye section settings se aayegi, block se nahi) -->
+        {% if section.settings.heading_main != blank %}
+        <div class="heading-main">
+           <h2> {{ section.settings.heading_main }} </h2> 
+        </div>
+        {% endif %}
+
+        <div class="columns-all">
+            {% for block in section.blocks %}
+            <div class="columns" {{ block.shopify_attributes }}>
+                
+                {% if block.settings.image_columns != blank %}
+                <div class="columns-imgs">
+                    <!-- Image ID match honi chahiye (image_columns) -->
+                    <img src="{{ block.settings.image_columns | img_url: '600x' }}" alt="{{ block.settings.columns_heading }}">
+                </div>
+                {% endif %} 
+
+                <div class="heading-columns"> 
+                    {% if block.settings.columns_heading != blank %}
+                    <h3> {{ block.settings.columns_heading }} </h3>
+                    {% endif %}
+                </div> 
+
+                <div class="paragraph-columns">
+                    {% if block.settings.paragraph_text != blank %}
+                        <p> {{ block.settings.paragraph_text }} </p>
+                    {% endif %}
+                </div>
+
+                 <div class="name-columns">
+                    {% if block.settings.name_column != blank %}
+                        <p> {{ block.settings.name_column }} </p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}        
+        </div>    
+    </div>
+</section>
+
+{% schema %}
+{ 
+    "name": "multi columns",
+    "settings": [
+        {
+            "type": "text",
+            "id": "heading_main",
+            "label": "Main Heading",
+            "default": "Our Services"
+        },
+        {
+            "type": "color",
+            "id": "bg_color",
+            "label": "Background Color",
+            "default": "#ffffff"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "columns",
+            "name": "column",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image_columns",
+                    "label": "Select Image"
+                },
+                {
+                    "type": "text",
+                    "id": "columns_heading",
+                    "label": "Column Title",
+                    "default": "Feature Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "paragraph_text",
+                    "label": "Column Description",
+                    "default": "Add a short description about this feature."
+                },
+                {
+                  "type": "text",
+                  "id": "name_column",
+                  "label": "Name"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "multi columns",
+            "blocks": [
+                { "type": "columns" },
+                { "type": "columns" },
+                { "type": "columns" }
+            ]
+        }
+    ]
+}
+{% endschema %}
