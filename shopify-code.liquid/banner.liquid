@@ -1,0 +1,230 @@
+<style>
+  .hro-container {
+    position: relative; 
+    width: 100%;
+    height: 100vh; 
+    min-height: 500px; /* Taaki mobile par bahut chhota na lage */
+    overflow: hidden;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .hro-banner-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; 
+  }
+
+  .hro-banner-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+  }
+
+  .hro-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; 
+    display: flex;
+    align-items: center; 
+    padding: 0 5%; /* Common padding for all devices */
+    background: rgba(0,0,0,0.1); /* Thoda sa dark overlay readability ke liye */
+  }
+
+  .hro-content-box {
+    max-width: 700px;
+    color: #fafafaff; 
+    width: 100%;
+  }
+
+  .hro-subhead {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .hro-main-title {
+    font-size: 56px; /* Desktop Size */
+    font-weight: 500;
+    margin: 10px 0 20px 0;
+    line-height: 1.1;
+    word-wrap: break-word; /* Text screen se bahar nahi jayega */
+  }
+
+  .hro-btn-group {
+    display: flex;
+    flex-wrap: wrap; /* Buttons wrap honge */
+    gap: 15px;
+    margin-top: 30px;
+  }
+
+  .hro-btn-black, .hro-btn-outline {
+    padding: 15px 35px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    min-width: 180px; /* Proper button width */
+    transition: 0.3s ease;
+  }
+
+  .hro-btn-black {
+    background: #1c1c1c;
+    color: white;
+    border: 1px solid #efdf51ff;
+  }
+
+  .hro-btn-outline {
+    border: 1px solid #efdf51ff;
+    color: #ffffffff;
+    background: transparent;
+  }
+
+  /* --- TABLET RESPONSIVENESS --- */
+  @media (max-width: 1024px) {
+    .hro-content-overlay { padding-left: 8%; }
+    .hro-main-title { font-size: 42px; }
+  }
+
+  /* --- MOBILE RESPONSIVENESS --- */
+  @media (max-width: 767px) {
+    .hro-container { height: 80vh; } /* Mobile par thoda height kam */
+    
+    .hro-content-overlay { 
+      padding: 0 20px; 
+      justify-content: center; /* Center content on mobile */
+      text-align: center;
+    }
+
+    .hro-main-title { 
+      font-size: 32px; /* Chhota font mobile ke liye */
+      margin-bottom: 15px;
+    }
+
+    .hro-btn-group { 
+      justify-content: center;
+      flex-direction: column; /* Buttons ek ke niche ek */
+      gap: 10px;
+    }
+
+    .hro-btn-black, .hro-btn-outline {
+      width: 100%; /* Full width buttons on mobile */
+      padding: 12px 20px;
+    }
+  }
+</style>
+
+<section id="hero-banner-{{ section.id }}" class="hro-section">
+  <div class="hro-container">
+    <div class="hro-banner-img">
+      {%- if section.settings.bg_image != blank -%}
+        <img src="{{ section.settings.bg_image | img_url: 'master' }}" alt="Banner">
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+
+    <div class="hro-content-overlay">
+      <div class="hro-content-box">
+        {%- for block in section.blocks -%}
+          <div class="hro-block-{{ block.id }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.subhead_text != blank -%}
+              <p class="hro-subhead">{{ block.settings.subhead_text }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.heading != blank -%}
+              <h1 class="hro-main-title">{{ block.settings.heading }}</h1>
+            {%- endif -%}
+
+            <div class="hro-btn-group"> 
+              {%- if block.settings.btn1_label != blank -%}
+                <a href="{{ block.settings.btn1_link }}" class="hro-btn-black">{{ block.settings.btn1_label }}</a>
+              {%- endif -%}
+              
+              {%- if block.settings.btn2_label != blank -%}
+                <a href="{{ block.settings.btn2_link }}" class="hro-btn-outline">{{ block.settings.btn2_label }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner Responsive",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner Content",
+      "limit": 1, 
+      "settings": [
+        {
+          "type": "text",
+          "id": "subhead_text",
+          "label": "Sub Heading",
+          "default": "Luxury Collection"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "CHERI LIFESTYLE"
+        },
+        {
+          "type": "text",
+          "id": "btn1_label",
+          "label": "Button 1 Label",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "btn1_link",
+          "label": "Button 1 Link"
+        },
+        {
+          "type": "text",
+          "id": "btn2_label",
+          "label": "Button 2 Label",
+          "default": "30-MIN CONSULTATION"
+        },
+        {
+          "type": "url",
+          "id": "btn2_link",
+          "label": "Button 2 Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner Responsive",
+      "blocks": [
+        {
+          "type": "banner"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
