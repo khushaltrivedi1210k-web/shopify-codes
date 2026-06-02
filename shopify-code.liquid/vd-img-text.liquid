@@ -1,0 +1,94 @@
+<section class="story-section-{{ section.id }} story-section">
+  <div class="story-flex">
+    <div class="story-media">
+      {% if section.settings.video_url != blank %}
+        <video autoplay muted loop playsinline class="story-video">
+          <source src="{{ section.settings.video_url }}" type="video/mp4">
+        </video>
+      {% elsif section.settings.image != blank %}
+        <img src="{{ section.settings.image | img_url: '1200x' }}" alt="{{ section.settings.heading }}" loading="lazy">
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <div class="story-content">
+      <div class="story-content-inner">
+        {% if section.settings.subheading != blank %}
+          <p class="gold-text">{{ section.settings.subheading }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2>{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <p class="story-desc">{{ section.settings.text }}</p>
+        {% endif %}
+
+        {% if section.settings.btn_label != blank %}
+          <a href="{{ section.settings.btn_link }}" class="read-more">{{ section.settings.btn_label }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story-section { padding: 100px 0; background: #000000ff;  overflow: hidden; }
+  .story-flex { display: flex; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* Media Styling */
+  .story-media { flex: 1; height: 550px; overflow: hidden; position: relative; }
+  .story-media img, .story-video {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* Content Styling */
+  .story-content { flex: 1; padding: 0 5% 0 80px; }
+  .story-content-inner { max-width: 500px; }
+  .gold-text { color: #D4AF37; letter-spacing: 3px; font-weight: 600; font-size: 13px; text-transform: uppercase; margin-bottom: 15px; }
+  .story-content h2 { font-family: serif; font-size: 48px; margin: 0 0 25px; line-height: 1.2; color: #ffffffff; }
+  .story-desc { font-size: 16px; line-height: 1.8; color: #ffffffff; margin-bottom: 30px; }
+  .read-more { display: inline-block; border-bottom: 1px solid #d69e3dff; text-decoration: none; color: #ffffffff; padding-bottom: 5px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
+
+  /* RESPONSIVE */
+  @media (max-width: 990px) {
+    .story-content { padding: 0 40px; }
+    .story-content h2 { font-size: 36px; }
+    .story-media { height: 450px; }
+  }
+  @media (max-width: 767px) {
+    .story-flex { flex-direction: column; }
+    .story-media { width: 100%; height: 350px; }
+    .story-content { width: 100%; padding: 40px 20px; text-align: center; }
+    .story-content-inner { max-width: 100%; }
+    .story-content h2 { font-size: 32px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Wine Story Video/Img",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "MP4 Video URL",
+      "info": "Shopify Files se link copy karke yahan dalein. Khali rakhne par image dikhegi."
+    },
+    { "type": "image_picker", "id": "image", "label": "Fallback Image" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "SINCE 1924" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Handcrafted Perfection" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Our vineyards are located in the heart of the valley."
+    },
+    { "type": "text", "id": "btn_label", "label": "Button Label", "default": "Learn Our Story" },
+    { "type": "url", "id": "btn_link", "label": "Button Link" }
+  ],
+  "presets": [{ "name": "Wine Story Video/Img" }]
+}
+{% endschema %}
