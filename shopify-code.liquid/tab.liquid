@@ -1,0 +1,210 @@
+<style>
+   .tab-section {
+    padding: 60px 0;
+    text-align: {{ section.settings.heading_alignment }};
+    background: #1a5f3a;
+    color: white;
+}
+
+    .tab-heading h2 {
+        color: #ffffffff !important;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .tab-headers-container {
+        display: flex;
+        justify-content: {% if section.settings.tabs_alignment == 'left' %}
+            flex-start
+        {% elsif section.settings.tabs_alignment == 'right' %}
+            flex-end
+        {% else %}center{% endif %};
+        gap: 20px; 
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e0e0e0; 
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .tab-trigger {
+        margin: 0;
+        padding: 12px 25px;
+        color: #ffffffff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        bottom: -2px; 
+        border-bottom: 2px solid transparent;
+    }
+
+    .tab-trigger:hover {
+        color: #000000;
+    }
+
+    .tab-trigger.is-active {
+        color: #ffffffff;
+        border-bottom: 2px solid #000000; 
+    }
+
+    .tab-contents-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: {{ section.settings.content_alignment }}; 
+    }
+
+    .tab-content-panel {
+        display: none; 
+        animation: fadeIn 0.4s ease;
+    }
+
+    .tab-content-panel.is-active {
+        display: block;
+    }
+
+    .tab-content-panel h4 {
+        margin: 0;
+        font-size: 16px;
+        color: #ffffffff;
+        line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>    
+
+<section class="tab-section">
+    <div class="main-tab">
+        <div class="tab-heading">
+            <h2>{{ section.settings.tab_heading }}</h2>
+         </div>  
+   
+         <div class="tab-headers-container">
+            {% for block in section.blocks %}
+                {% if block.settings.second_tabs != blank %}
+                    <div class="tab-trigger {% if forloop.first %}is-active{% endif %}" 
+                         data-tab-target="tab-{{ block.id }}" 
+                         {{ block.shopify_attributes }}>
+                        {{ block.settings.second_tabs }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+         </div>   
+
+         <div class="tab-contents-container">
+            {% for block in section.blocks %}
+                {% if block.settings.empty_value != blank %}
+                    <div class="tab-content-panel {% if forloop.first %}is-active{% endif %}" 
+                         id="tab-{{ block.id }}">
+                        <h4>{{ block.settings.empty_value }}</h4>
+                    </div>
+                {% endif %}
+            {% endfor %}
+         </div>
+   </div>     
+</section>    
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const triggers = document.querySelectorAll('.tab-trigger');
+        const panels = document.querySelectorAll('.tab-content-panel');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                triggers.forEach(t => t.classList.remove('is-active'));
+                panels.forEach(p => p.classList.remove('is-active'));
+
+                this.classList.add('is-active');
+
+                const targetId = this.getAttribute('data-tab-target');
+                const targetPanel = document.getElementById(targetId);
+                if(targetPanel) {
+                    targetPanel.classList.add('is-active');
+                }
+            });
+        });
+    });
+</script>
+
+{% schema %}
+{
+    "name": "tab",
+    "settings": [
+        {
+            "type": "text",
+            "id": "tab_heading",
+            "label": "Main Heading",
+            "default": "Products Information"
+        },
+        {
+            "type": "select",
+            "id": "heading_alignment",
+            "label": "Main Heading Alignment",
+            "options": [
+                { "value": "left", "label": "Left" },
+                { "value": "center", "label": "Center" },
+                { "value": "right", "label": "Right" }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "select",
+            "id": "tabs_alignment",
+            "label": "Tabs Line Alignment",
+            "options": [
+                { "value": "left", "label": "Left" },
+                { "value": "center", "label": "Center" },
+                { "value": "right", "label": "Right" }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "select",
+            "id": "content_alignment",
+            "label": "Content Text Alignment",
+            "options": [
+                { "value": "left", "label": "Left" },
+                { "value": "center", "label": "Center" },
+                { "value": "right", "label": "Right" }
+            ],
+            "default": "left"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "tab_item",
+            "name": "Tab Item",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "second_tabs",
+                    "label": "Tab Name",
+                    "default": "New Tab"
+                },
+                {
+                    "type": "richtext",
+                    "id": "empty_value",
+                    "label": "Value / Content",
+                    "default": "<p>Add details text here for this tab.</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "tab",
+            "blocks": [
+                { "type": "tab_item" },
+                { "type": "tab_item" },
+                { "type": "tab_item" }
+            ]
+        }
+    ]
+}
+{% endschema %}

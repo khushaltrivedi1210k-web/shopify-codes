@@ -1,9 +1,4 @@
 <style>
-
-/* =========================
-   WINE FAVORITES SECTION
-========================= */
-
 #wine-faves-{{ section.id }}{
   width:100%;
   background:#fff;
@@ -20,10 +15,6 @@
   align-items:stretch;
   gap:30px;
 }
-
-/* =========================
-   LEFT CONTENT
-========================= */
 
 .wine-faves-left-{{ section.id }}{
   flex:0 0 26%;
@@ -79,10 +70,6 @@
   background:#111;
   color:#fff;
 }
-
-/* =========================
-   RIGHT GALLERY
-========================= */
 
 .wine-faves-right-{{ section.id }}{
   flex:1;
@@ -195,9 +182,6 @@
   transform:translate(-50%,-50%);
 }
 
-/* =========================
-   TABLET
-========================= */
 
 @media(max-width:1100px){
 
@@ -223,10 +207,6 @@
   }
 
 }
-
-/* =========================
-   MOBILE
-========================= */
 
 @media(max-width:767px){
 
@@ -265,11 +245,6 @@
 
   <div class="wine-faves-container-{{ section.id }}">
 
-
-    <!-- =========================
-         LEFT CONTENT
-    ========================== -->
-
     <div class="wine-faves-left-{{ section.id }}">
 
       {% if section.settings.title != blank %}
@@ -295,12 +270,6 @@
 
     </div>
 
-
-
-    <!-- =========================
-         GALLERY
-    ========================== -->
-
     <div class="wine-faves-right-{{ section.id }}">
 
 
@@ -308,10 +277,8 @@
 
         <div
           class="wine-fave-card-{{ section.id }}"
-          {{ block.shopify_attributes }}
-        >
+          {{ block.shopify_attributes }} >
 
-          <!-- NORMAL IMAGE -->
           {% if block.settings.image_normal != blank %}
 
             <img
@@ -323,8 +290,6 @@
 
           {% endif %}
 
-
-          <!-- HOVER IMAGE -->
           {% if block.settings.image_hover != blank %}
 
             <img
@@ -336,14 +301,10 @@
 
           {% endif %}
 
-
-          <!-- NORMAL TEXT -->
           <div class="wine-overlay-{{ section.id }}">
             {{ block.settings.overlay_text }}
           </div>
 
-
-          <!-- HOVER TEXT -->
           <div class="wine-overlay-hover-{{ section.id }}">
             {{ block.settings.overlay_texthover }}
           </div>
